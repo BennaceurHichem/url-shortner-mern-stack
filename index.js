@@ -52,13 +52,14 @@ const errorPage = path.join(__dirname, "public/404.html");
 
 app.get('/:id',(req,res,next)=>{
 
-        
-        res.json({
-        message:"ben shortner, SHORT URLs for your life as a googler"
+        const { slug } = req.params;
 
-       
-
-        })
+        const existing = await urls.findOne({ slug });
+        if (existing) {
+            res.redirect(existing.url);
+        } else {
+            res.status(404).sendFile(errorPage);
+        }
        
 
 });
