@@ -18,6 +18,13 @@ const app = express();
 
 const db = monk(process.env.MONGODB_URI);
 
+//
+db.on("open", () => {
+        console.log("Database connected.");
+    });
+
+
+
 db.addMiddleware(require('monk-middleware-debug'))
 
 const urls = db.get("urls");
@@ -27,29 +34,6 @@ urls.createIndex({ slug: 1 }, { unique: true });
 console.log("objects"+util.inspect(urls, {showHidden: false, depth: null}))
 
 
-urlsCollection= [
-      
-       { url:"abdennoururl.com",
-        slug:"hhhh"},
-
-]
-/*db.get("urls").insert({ url:"abdennoururl.com",
-slug:"hbhhh"}).then((res)=> {
-
-        
-        console.log("Number of documents inserted: " + res.insertedCount);
-        db.close();
-      }).catch((err)=>{
-
-                console.log("ERROR"+err)
-      });
-
-      */
-
-
-
-
-
 app.use(helmet())
 //logger with tiny message 
 app.use(morgan('tiny'))
@@ -57,6 +41,10 @@ app.use(cors())
 app.use(express.json())
 //define te static folder for the server side 
 app.use(express.static('./public'));
+
+
+
+const errorPage = path.join(__dirname, "public/404.html");
 
 
 
@@ -76,7 +64,37 @@ app.get('/:id',(req,res,next)=>{
 });
 
 
-app.post('/url',(req,res,next)=>{
+app.post('/url', async (req,res,next)=>{
+
+        let { slug, url } = req.body;
+
+        if (!url) {
+                return res.status(400).send({ error: "url is required" });
+            }
+        // Check if the image_url is a valid url.
+        if (!validUrl.isUri(url)) {
+                return res.status(400).send({ error: "url must be a valid url" });
+        }
+
+        if (!slug) {
+                // generate a random slug
+                slug = nanoid(5);
+                slug = slug.toLowerCase();
+        }
+        //check if the slug exist in the database 
+        const existing = await urls.findOne({ slug });
+        if (existing) {
+                return res.status(404).send({ error: "Slug in use. 🍔" });
+        }
+
+        const created = urls.insert({ slug: slug, url: url }).then(docs => {
+            // send feed back
+            res.json(docs);
+        })
+        .catch(err => {
+            return res.status(404).send({ error: err });
+        });
+
 
 
 })
