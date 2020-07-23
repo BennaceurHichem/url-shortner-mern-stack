@@ -5,6 +5,9 @@ const helmet = require('helmet')
 const cors = require('cors')
 const monk = require('monk')
 const util = require('util')
+const path = require("path");
+const { nanoid } = require("nanoid");
+
 
 
 var validUrl = require("valid-url");
@@ -50,19 +53,7 @@ const errorPage = path.join(__dirname, "public/404.html");
 
 
 
-app.get('/:id',(req,res,next)=>{
 
-        const { slug } = req.params;
-
-        const existing = await urls.findOne({ slug });
-        if (existing) {
-            res.redirect(existing.url);
-        } else {
-            res.status(404).sendFile(errorPage);
-        }
-       
-
-});
 
 
 app.post('/url', async (req,res,next)=>{
@@ -85,7 +76,7 @@ app.post('/url', async (req,res,next)=>{
         //check if the slug exist in the database 
         const existing = await urls.findOne({ slug });
         if (existing) {
-                return res.status(404).send({ error: "Slug in use. 🍔" });
+                return res.status(404).send({ error: `Slug ${slug} in use. 🍔` });
         }
 
         const created = urls.insert({ slug: slug, url: url }).then(docs => {
@@ -101,7 +92,19 @@ app.post('/url', async (req,res,next)=>{
 })
 
 
+app.get('/:id',async (req,res,next)=>{
 
+        const { slug } = req.params;
+
+        const existing = await urls.findOne({ slug });
+        if (existing) {
+            res.redirect(existing.url);
+        } else {
+            res.status(404).sendFile(errorPage);
+        }
+       
+
+});
 /*
 //cors policy managment middleware 
  //CORS Should be restricted

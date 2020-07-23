@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Hichem ben Shortner</title>
+    <link rel="stylesheet" type="text/css" href="./styles.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js" charset="utf-8"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js" charset="utf-8"></script>
+
+</head>
+<body>
+    <div id="root" class="login">
+        
+    </div>
+
+    <p class="text-muted">
+        Copyright © 2020 Bennaceur  Hichem |
+        <a href="https://github.com/BennaceurHichem/url-shortener"
+            >Link to Github</a
+        >
+    </p>
+
+    <script type="text/babel">
+        class Main extends React.Component {
+
+
+            render() {
+                return (
+                    
+          
+
+                        <div>
+                            <h1>WELCOME TO YOUR URL SHORTNER</h1>
+                            <form method="post">
+                                <input type="text" name="url" placeholder="enter your url " required="required" />
+                                <input name="slug" placeholder="enter desired url " required="required" />
+                                <button type="submit" class="btn btn-primary btn-block btn-large">get me my short url .</button>
+                            </form>
+                        </div>
+                
+                );
+            }
+        }
+        ReactDOM.render(
+            <Main />,
+            document.getElementById('root')
+        );
+        </script>
+
+</body>
+</html>
