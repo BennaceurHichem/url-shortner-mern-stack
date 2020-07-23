@@ -8,6 +8,7 @@ const util = require('util')
 
 
 var validUrl = require("valid-url");
+const { MongoError } = require('mongodb')
 require("dotenv").config();
 
  
@@ -16,11 +17,35 @@ const app = express();
 
 
 const db = monk(process.env.MONGODB_URI);
+
+db.addMiddleware(require('monk-middleware-debug'))
+
 const urls = db.get("urls");
 urls.createIndex({ slug: 1 }, { unique: true });
 
 
-console.log("objcts"+util.inspect(urls, {showHidden: false, depth: null}))
+console.log("objects"+util.inspect(urls, {showHidden: false, depth: null}))
+
+
+urlsCollection= [
+      
+       { url:"abdennoururl.com",
+        slug:"hhhh"},
+
+]
+/*db.get("urls").insert({ url:"abdennoururl.com",
+slug:"hbhhh"}).then((res)=> {
+
+        
+        console.log("Number of documents inserted: " + res.insertedCount);
+        db.close();
+      }).catch((err)=>{
+
+                console.log("ERROR"+err)
+      });
+
+      */
+
 
 
 

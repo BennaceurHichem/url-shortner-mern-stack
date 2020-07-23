@@ -17,6 +17,7 @@
     "helmet": "^3.23.3",
     "mongodb": "^3.5.9",
     "monk": "^7.3.0",
+    "monk-middleware-debug": "^0.2.0",
     "morgan": "^1.10.0",
     "up": "^1.0.2",
     "util": "^0.12.3",
