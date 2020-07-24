@@ -66,7 +66,31 @@ const errorPage = path.join(__dirname, "public/404.html");
 
 
 
+///cors policy managment middleware 
+ //CORS Should be restricted
+ app.use(function(req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+        next();
+      });
 
+
+
+
+
+app.get('/:id',async (req,res,next)=>{
+
+        const { slug } = req.params;
+
+        const existing = await urls.findOne({ slug });
+        if (existing) {
+            res.redirect(existing.url);
+        } else {
+            res.status(404).sendFile(errorPage);
+        }
+       
+
+});
 
 
 app.post('/url', async (req,res,next)=>{
@@ -85,12 +109,14 @@ app.post('/url', async (req,res,next)=>{
                 // generate a random slug
                 slug = nanoid(5);
                 slug = slug.toLowerCase();
+        }else{
+                        //check if the slug exist in the database 
+                        const existing = await urls.findOne({ slug });
+                        if (existing) {
+                                return res.status(404).send({ error: `Slug ${slug} in use. 🍔` });
+                          }
         }
-        //check if the slug exist in the database 
-        const existing = await urls.findOne({ slug });
-        if (existing) {
-                return res.status(404).send({ error: `Slug ${slug} in use. 🍔` });
-        }
+  
 
         const created = urls.insert({ slug: slug, url: url }).then(docs => {
             // send feed back
@@ -98,6 +124,8 @@ app.post('/url', async (req,res,next)=>{
         })
         .catch(err => {
             return res.status(404).send({ error: err });
+            next(error);
+
         });
 
 
@@ -105,29 +133,24 @@ app.post('/url', async (req,res,next)=>{
 })
 
 
-app.get('/:id',async (req,res,next)=>{
 
-        const { slug } = req.params;
 
-        const existing = await urls.findOne({ slug });
-        if (existing) {
-            res.redirect(existing.url);
+//error is e=sent from the app.get above 
+app.use((error, req, res, next) => {
+        if (error.status) {
+          res.status(error.status);
         } else {
-            res.status(404).sendFile(errorPage);
+          res.status(500);
         }
-       
-
-});
-/*
-//cors policy managment middleware 
- //CORS Should be restricted
- app.use(function(req, res, next) {
-        res.header("Access-Control-Allow-Origin", "*");
-        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-        next();
+        res.json({
+          message: error.message,
+          stack: process.env.NODE_ENV === 'production' ? '🥞' : error.stack,
+        });
       });
 
-*/
+      
+
+
 
 
 const port = process.env.PORT || 1337;

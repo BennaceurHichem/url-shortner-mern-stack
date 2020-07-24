@@ -33,14 +33,34 @@
                 }
                 this.handlUrlChange = this.handlUrlChange.bind(this);
                 this.handlSlugChange = this.handlSlugChange.bind(this);
+                this.submitRequest = this.submitRequest.bind(this)
             }
       
-
-             submitRequest(event){
-                
-                fetch('/url',  
+            componentDidMount(){
+              /*  fetch('/url',  
                 {
-                    method: "post",
+                    method: "POST",
+                    headers: {
+                        'content-type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                    url: "http://bmshoppingalgerie.com",
+                    slug: "haha"
+                    })
+                })
+                 .then( (response)=> {
+                            // The API call was successful!
+                            console.log('success!', response);
+                        }).catch( (err)=> {
+                            // There was an error
+                            console.warn('Something went wrong.', err);
+                        });
+            }
+            async submitRequest(event){
+                
+                 fetch('/url',  
+                {
+                    method: "POST",
                     headers: {
                         'Accept': 'application/json',
                         'Content-Type': 'application/x-www-form-urlencoded'
@@ -50,13 +70,15 @@
                     slug: this.state.slug
                     })
                 })
-                 .then(function (response) {
+                 .then( (response)=> {
                             // The API call was successful!
                             console.log('success!', response);
-                        }).catch(function (err) {
+                        }).catch( (err)=> {
                             // There was an error
                             console.warn('Something went wrong.', err);
                         });
+
+                        */
 
                 }
               
