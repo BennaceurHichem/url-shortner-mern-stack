@@ -6,7 +6,13 @@ const cors = require('cors')
 const monk = require('monk')
 const util = require('util')
 const path = require("path");
+var bodyParser = require('body-parser');
+
 const { nanoid } = require("nanoid");
+
+
+
+
 
 
 
@@ -18,6 +24,13 @@ require("dotenv").config();
 
 const app = express();
 
+
+app.use(bodyParser.json());
+
+
+app.use(bodyParser.urlencoded({
+        extended: false
+     }));
 
 const db = monk(process.env.MONGODB_URI);
 
@@ -40,7 +53,7 @@ console.log("objects"+util.inspect(urls, {showHidden: false, depth: null}))
 app.use(helmet())
 //logger with tiny message 
 app.use(morgan('tiny'))
-app.use(cors())
+//app.use(cors())
 app.use(express.json())
 //define te static folder for the server side 
 app.use(express.static('./public'));

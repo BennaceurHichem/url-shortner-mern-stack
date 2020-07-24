@@ -7,36 +7,106 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react.js" charset="utf-8"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.4.2/react-dom.js" charset="utf-8"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.21.1/babel.min.js" charset="utf-8"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <meta http-equiv="Content-Security-Policy" content="default-src gap://ready file://* *; style-src 'self' http://* https://* 'unsafe-inline'; script-src 'self' http://* https://* 'unsafe-inline' 'unsafe-eval'">
 
 </head>
 <body>
     <div id="root" class="login">
         
+
+
+
+      
     </div>
 
-    <p class="text-muted">
-        Copyright © 2020 Bennaceur  Hichem |
-        <a href="https://github.com/BennaceurHichem/url-shortener"
-            >Link to Github</a
-        >
-    </p>
+  
 
     <script type="text/babel">
         class Main extends React.Component {
 
+            constructor(props){
+                super(props);
+                this.state={
+                    url:null,
+                    slug:null
+                }
+                this.handlUrlChange = this.handlUrlChange.bind(this);
+                this.handlSlugChange = this.handlSlugChange.bind(this);
+            }
+      
 
-            render() {
+             submitRequest(event){
+                
+                fetch('/url',  
+                {
+                    method: "post",
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: JSON.stringify({
+                    url: this.state.url,
+                    slug: this.state.slug
+                    })
+                })
+                 .then(function (response) {
+                            // The API call was successful!
+                            console.log('success!', response);
+                        }).catch(function (err) {
+                            // There was an error
+                            console.warn('Something went wrong.', err);
+                        });
+
+                }
+              
+             handlUrlChange(event){
+                event.preventDefault();
+                const URL = event.target.value
+                console.log("url: "+URL)
+                this.setState({
+
+                    url:URL,
+
+
+                })
+
+            }
+
+             handlSlugChange(event){
+                event.preventDefault();
+                        const slug = event.target.value
+                        console.log("slug: "+slug)
+                        this.setState({
+
+                            slug,
+
+
+                        })
+
+                }
+
+            render() 
+            {
+
+              
+
                 return (
                     
           
 
                         <div>
                             <h1>WELCOME TO YOUR URL SHORTNER</h1>
-                            <form method="post">
-                                <input type="text" name="url" placeholder="enter your url " required="required" />
-                                <input name="slug" placeholder="enter desired url " required="required" />
-                                <button type="submit" class="btn btn-primary btn-block btn-large">get me my short url .</button>
+                            <form method="post" onSubmit={this.submitRequest} action='/'>
+                                <input type="text" name="url" value={this.state.url} placeholder="enter your url " required="required" onChange={this.handlUrlChange} />
+                                <input name="slug" value={this.state.slug} placeholder="enter desired url " required="required"  onChange={this.handlSlugChange}  />
+                                <button type="submit"  className="btn btn-primary btn-block btn-large" >get me my short url .</button>
                             </form>
+
+                            <p className="text-muted">
+                                Copyright © 2020 Bennaceur  Hichem |
+                                <a href="https://github.com/BennaceurHichem/url-shortener">Link to Github</a>
+                               </p>
                         </div>
                 
                 );
