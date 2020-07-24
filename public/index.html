@@ -29,7 +29,9 @@
                 super(props);
                 this.state={
                     url:null,
-                    slug:null
+                    slug:null,
+                    message:"MESSAGE",
+
                 }
                 this.handlUrlChange = this.handlUrlChange.bind(this);
                 this.handlSlugChange = this.handlSlugChange.bind(this);
@@ -75,8 +77,15 @@
                  .then( (response)=> {
                             // The API call was successful!
                             console.log('success!', response);
+                            if(response.status ===404){
+                                this.state.message = "your slug is in use :  "+response.data.url+"/"+response.data.slug
+
+                            }
+
                         }).catch( (err)=> {
                             // There was an error
+                            this.state.message = "please fill your slug with a valid slug! "
+
                             console.warn('Something went wrong.', err);
                         });
 
@@ -102,11 +111,9 @@
                 event.preventDefault();
                         const slug = event.target.value
                         console.log("slug: "+slug)
-                        this.setState({
-
+                        this.setState(
+                        {
                             slug,
-
-
                         })
 
                 }
@@ -126,7 +133,8 @@
                                 <input type="text" name="url" value={this.state.url} placeholder="enter your url " required="required" onChange={this.handlUrlChange} />
                                 <input name="slug" value={this.state.slug} placeholder="enter desired url " required="required"  onChange={this.handlSlugChange}  />
                                 <button type="submit" value="Submit"  className="btn btn-primary btn-block btn-large" >get me my short url .</button>
-                            </form>
+                                    <p>{this.state.message?this.state.message :""}</p>
+                                </form>
 
                             <p className="text-muted">
                                 Copyright © 2020 Bennaceur  Hichem |

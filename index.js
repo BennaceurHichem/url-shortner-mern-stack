@@ -18,7 +18,7 @@ const { nanoid } = require("nanoid");
 
 var validUrl = require("valid-url");
 const { MongoError } = require('mongodb')
-require("dotenv").config();
+if(process.env.NODE_ENV!=="production") require("dotenv").config();
 
  
 
