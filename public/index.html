@@ -30,7 +30,9 @@
                 this.state={
                     url:null,
                     slug:null,
-                    message:"MESSAGE",
+                    success: false,
+                    error: false,
+                    message: ""
 
                 }
                 this.handlUrlChange = this.handlUrlChange.bind(this);
@@ -77,10 +79,20 @@
                  .then( (response)=> {
                             // The API call was successful!
                             console.log('success!', response);
-                            if(response.status ===404){
-                                this.state.message = "your slug is in use :  "+response.data.url+"/"+response.data.slug
+                 if (response.ok) {
+                    const result = await response.json();
+                    this.state.error = false;
+                    this.state.message="url is added succefully"
+                    this.success = true;
+                    console.log("result: "+result);
+                } else {
+                    const result = await response.json();
+                    this.message = result.error;
+                    this.success = false;
+                    this.error = true;
+                    this.state.message="chekc your slug please and try again"
 
-                            }
+                }
 
                         }).catch( (err)=> {
                             // There was an error
