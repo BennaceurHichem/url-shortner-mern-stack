@@ -32,7 +32,8 @@
                     slug:null,
                     success: false,
                     error: false,
-                    message: ""
+                    message: "",
+                    res:""
 
                 }
                 this.handlUrlChange = this.handlUrlChange.bind(this);
@@ -80,17 +81,30 @@
                             // The API call was successful!
                             console.log('success!', response);
                  if (response.ok) {
+
+                    console.log('ok!', response);
+
                     const result =  response.json();
-                    this.state.error = false;
-                    this.state.message="url is added succefully"
-                    this.success = true;
+                    
+                    this.setState({
+
+                        message :"your shortened url is "+this.state.url+"/"+this.state.slug,
+                        success:true,
+                        error:false,
+                      
+                        })
                     console.log("result: "+result);
                 } else {
-                    const result = await response.json();
-                    this.message = result.error;
-                    this.success = false;
-                    this.error = true;
-                    this.state.message="chekc your slug please and try again"
+                    console.log('not ok!', response);
+
+                    const result =  response.json();
+                    this.setState({
+
+                        message :result.error? result.error:"please check your slug and try again",
+                        success:false,
+                        error:true
+                    })
+            
 
                 }
 
@@ -143,9 +157,12 @@
                             <h1>WELCOME TO YOUR URL SHORTNER</h1>
                             <form method="post" onSubmit={this.submitRequest} action='/'>
                                 <input type="text" name="url" value={this.state.url} placeholder="enter your url " required="required" onChange={this.handlUrlChange} />
-                                <input name="slug" value={this.state.slug} placeholder="enter desired url " required="required"  onChange={this.handlSlugChange}  />
+                                <input name="slug" value={this.state.slug} placeholder="enter desired slug " required="required"  onChange={this.handlSlugChange}  />
                                 <button type="submit" value="Submit"  className="btn btn-primary btn-block btn-large" >get me my short url .</button>
-                                    <p>{this.state.message?this.state.message :""}</p>
+                                    <p>{this.state.error &&
+                                                             this.state.message}</p>
+                                     <p>{this.state.success &&
+                                                             this.state.message}</p>
                                 </form>
 
                             <p className="text-muted">
