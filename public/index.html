@@ -80,7 +80,7 @@
                             // The API call was successful!
                             console.log('success!', response);
                  if (response.ok) {
-                    const result = await response.json();
+                    const result =  response.json();
                     this.state.error = false;
                     this.state.message="url is added succefully"
                     this.success = true;
