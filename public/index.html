@@ -55,15 +55,17 @@
                             // There was an error
                             console.warn('Something went wrong.', err);
                         });
+                        */
             }
-            async submitRequest(event){
+
+            
+             submitRequest = (event)=>{
                 
                  fetch('/url',  
                 {
                     method: "POST",
                     headers: {
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                        'content-type': 'application/json',
                     },
                     body: JSON.stringify({
                     url: this.state.url,
@@ -78,7 +80,8 @@
                             console.warn('Something went wrong.', err);
                         });
 
-                        */
+                        event.preventDefault();
+
 
                 }
               
@@ -122,12 +125,12 @@
                             <form method="post" onSubmit={this.submitRequest} action='/'>
                                 <input type="text" name="url" value={this.state.url} placeholder="enter your url " required="required" onChange={this.handlUrlChange} />
                                 <input name="slug" value={this.state.slug} placeholder="enter desired url " required="required"  onChange={this.handlSlugChange}  />
-                                <button type="submit"  className="btn btn-primary btn-block btn-large" >get me my short url .</button>
+                                <button type="submit" value="Submit"  className="btn btn-primary btn-block btn-large" >get me my short url .</button>
                             </form>
 
                             <p className="text-muted">
                                 Copyright © 2020 Bennaceur  Hichem |
-                                <a href="https://github.com/BennaceurHichem/url-shortener">Link to Github</a>
+                                <a href="https://github.com/BennaceurHichem/url-shortner-mern-stack">Link to Github</a>
                                </p>
                         </div>
                 
