@@ -78,19 +78,7 @@ const errorPage = path.join(__dirname, "public/404.html");
 
 
 
-app.get('/:id',async (req,res,next)=>{
 
-        const { slug } = req.params;
-
-        const existing = await urls.findOne({ slug });
-        if (existing) {
-            res.redirect(existing.url);
-        } else {
-            res.status(404).sendFile(errorPage);
-        }
-       
-
-});
 
 
 app.post('/url', async (req,res,next)=>{
@@ -133,7 +121,20 @@ app.post('/url', async (req,res,next)=>{
 })
 
 
+app.get('/:slug',async (req,res)=>{
 
+        const { slug } = req.params;
+
+        const existing = await urls.findOne({ slug });
+        if (existing) {
+            res.redirect(existing.url);
+            
+        } else {
+            res.status(404).sendFile(errorPage);
+        }
+       
+
+});
 
 //error is e=sent from the app.get above 
 app.use((error, req, res, next) => {
